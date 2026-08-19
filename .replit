@@ -1,0 +1,9 @@
+run = "python app.py"
+entrypoint = "app.py"
+
+[nix]
+channel = "unstable"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
