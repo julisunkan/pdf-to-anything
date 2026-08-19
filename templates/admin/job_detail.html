@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <h1>Job Details: {{ job.original_filename }}</h1>
+    
+    <div class="job-info">
+        <p><strong>Job ID:</strong> {{ job.id }}</p>
+        <p><strong>Status:</strong> <span class="status-badge {{ job.status }}">{{ job.status }}</span></p>
+        <p><strong>Progress:</strong> {{ job.progress_percent }}%</p>
+        <p><strong>File Size:</strong> {{ (job.file_size / 1024 / 1024) | round(2) }} MB</p>
+        <p><strong>Pages:</strong> {{ job.page_count }}</p>
+        <p><strong>Created:</strong> {{ job.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        <p><strong>Expires:</strong> {{ job.expires_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    </div>
+    
+    <h2>Outputs</h2>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Format</th>
+                <th>Filename</th>
+                <th>Status</th>
+                <th>Size</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for output in job.outputs %}
+            <tr>
+                <td>{{ output.format_name }}</td>
+                <td>{{ output.output_filename }}</td>
+                <td><span class="status-badge {{ output.status }}">{{ output.status }}</span></td>
+                <td>{{ (output.file_size / 1024) | round(2) }} KB</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h2>Logs</h2>
+    <div class="logs-container">
+        {% for log in logs %}
+        <div class="log-entry {{ log.level | lower }}">
+            <span class="log-time">{{ log.timestamp.strftime('%H:%M:%S') }}</span>
+            <span class="log-level">{{ log.level }}</span>
+            <span class="log-message">{{ log.message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

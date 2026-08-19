@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <h1>Jobs</h1>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Job ID</th>
+                <th>File</th>
+                <th>Formats</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs.items %}
+            <tr>
+                <td>{{ job.id[:8] }}...</td>
+                <td>{{ job.original_filename }}</td>
+                <td>{{ job.output_formats }}</td>
+                <td><span class="status-badge {{ job.status }}">{{ job.status }}</span></td>
+                <td>{{ job.progress_percent }}%</td>
+                <td>{{ job.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    <a href="{{ url_for('admin.job_detail', job_id=job.id) }}">View</a>
+                    <form method="POST" action="{{ url_for('admin.delete_job', job_id=job.id) }}" style="display: inline;">
+                        <button type="submit" onclick="return confirm('Delete this job?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if jobs.has_prev %}<a href="?page={{ jobs.prev_num }}">Previous</a>{% endif %}
+        Page {{ jobs.page }} of {{ jobs.pages }}
+        {% if jobs.has_next %}<a href="?page={{ jobs.next_num }}">Next</a>{% endif %}
+    </div>
+</div>
+{% endblock %}

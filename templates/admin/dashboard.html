@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <h1>Admin Dashboard</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Jobs</h3>
+            <p class="stat-value">{{ total_jobs }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Completed</h3>
+            <p class="stat-value">{{ completed_jobs }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Failed</h3>
+            <p class="stat-value">{{ failed_jobs }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Storage Used</h3>
+            <p class="stat-value">{{ (storage_used / 1024 / 1024 / 1024) | round(2) }} GB</p>
+        </div>
+    </div>
+    
+    <div class="admin-section">
+        <h2>Recent Jobs</h2>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Job ID</th>
+                    <th>File</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in recent_jobs %}
+                <tr>
+                    <td>{{ job.id[:8] }}...</td>
+                    <td>{{ job.original_filename }}</td>
+                    <td><span class="status-badge {{ job.status }}">{{ job.status }}</span></td>
+                    <td>{{ job.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td><a href="{{ url_for('admin.job_detail', job_id=job.id) }}">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="admin-section">
+        <h2>Admin Tools</h2>
+        <a href="{{ url_for('admin.formats') }}" class="btn btn-secondary">Manage Formats</a>
+        <a href="{{ url_for('admin.settings') }}" class="btn btn-secondary">Settings</a>
+        <a href="{{ url_for('admin.view_logs') }}" class="btn btn-secondary">View Logs</a>
+        <button class="btn btn-secondary" onclick="runCleanup()">Run Cleanup</button>
+    </div>
+</div>
+
+<script>
+function runCleanup() {
+    if (confirm('Run cleanup? This will delete expired files.')) {
+        fetch('{{ url_for("admin.run_cleanup") }}', { method: 'POST' })
+            .then(r => r.json())
+            .then(data => alert(JSON.stringify(data)));
+    }
+}
+</script>
+{% endblock %}

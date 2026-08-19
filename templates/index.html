@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>PDF to Anything</h1>
+        <p>Convert, edit, organize and extract data from PDF files</p>
+        <p class="subtitle">No login required. Anonymous. Secure.</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Upload Section -->
+    <section class="upload-section">
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📄</div>
+            <h2>Upload PDF Files</h2>
+            <p>Drag and drop your PDF files here or click to browse</p>
+            <input type="file" id="fileInput" accept=".pdf" multiple hidden>
+            <button class="btn btn-primary" id="browseBtn">Browse Files</button>
+        </div>
+        
+        <!-- File List -->
+        <div id="fileList" class="file-list"></div>
+    </section>
+    
+    <!-- Format Selection -->
+    <section class="formats-section" id="formatsSection" style="display: none;">
+        <h2>Select Output Formats</h2>
+        <div id="formatGrid" class="format-grid"></div>
+        <div class="action-buttons">
+            <button class="btn btn-success" id="convertBtn">Convert Selected Files</button>
+            <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+        </div>
+    </section>
+    
+    <!-- Conversion Progress -->
+    <section class="progress-section" id="progressSection" style="display: none;">
+        <h2>Conversion Progress</h2>
+        <div id="jobsList" class="jobs-list"></div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2>Supported Formats</h2>
+        <div class="format-categories">
+            <div class="category" id="documentCategory"></div>
+            <div class="category" id="imageCategory"></div>
+            <div class="category" id="spreadsheetCategory"></div>
+            <div class="category" id="dataCategory"></div>
+        </div>
+    </section>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const browseBtn = document.getElementById('browseBtn');
+    const fileList = document.getElementById('fileList');
+    const formatsSection = document.getElementById('formatsSection');
+    const formatGrid = document.getElementById('formatGrid');
+    
+    let selectedFiles = [];
+    
+    // File upload handlers
+    browseBtn.addEventListener('click', () => fileInput.click());
+    
+    fileInput.addEventListener('change', handleFileSelect);
+    
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        fileInput.files = e.dataTransfer.files;
+        handleFileSelect();
+    });
+    
+    function handleFileSelect() {
+        selectedFiles = Array.from(fileInput.files).filter(f => f.type === 'application/pdf');
+        
+        if (selectedFiles.length === 0) {
+            showNotification('Please select PDF files', 'error');
+            return;
+        }
+        
+        displayFileList();
+        loadFormats();
+        formatsSection.style.display = 'block';
+    }
+    
+    function displayFileList() {
+        fileList.innerHTML = '<h3>Selected Files</h3>';
+        selectedFiles.forEach((file, idx) => {
+            const item = document.createElement('div');
+            item.className = 'file-item';
+            item.innerHTML = `
+                <span>${file.name}</span>
+                <span class="file-size">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                <button class="btn-remove" onclick="removeFile(${idx})">×</button>
+            `;
+            fileList.appendChild(item);
+        });
+    }
+    
+    function loadFormats() {
+        fetch('/api/v1/formats')
+            .then(r => r.json())
+            .then(data => {
+                formatGrid.innerHTML = '';
+                Object.entries(data).forEach(([category, formats]) => {
+                    formats.forEach(fmt => {
+                        const label = document.createElement('label');
+                        label.className = 'format-checkbox';
+                        label.innerHTML = `
+                            <input type="checkbox" value="${fmt.name}">
+                            <span>${fmt.description}</span>
+                        `;
+                        formatGrid.appendChild(label);
+                    });
+                });
+            });
+    }
+    
+    window.removeFile = function(idx) {
+        selectedFiles.splice(idx, 1);
+        if (selectedFiles.length === 0) {
+            formatsSection.style.display = 'none';
+        }
+        displayFileList();
+    };
+});
+</script>
+{% endblock %}
