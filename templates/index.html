@@ -60,6 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileList = document.getElementById('fileList');
     const formatsSection = document.getElementById('formatsSection');
     const formatGrid = document.getElementById('formatGrid');
+    const convertBtn = document.getElementById('convertBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const progressSection = document.getElementById('progressSection');
+    const jobsList = document.getElementById('jobsList');
     const availableFormats = {{ formats|tojson }};
     
     let selectedFiles = [];
@@ -68,6 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
     browseBtn.addEventListener('click', () => fileInput.click());
     
     fileInput.addEventListener('change', handleFileSelect);
+    convertBtn.addEventListener('click', startConversions);
+    cancelBtn.addEventListener('click', resetSelection);
     
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
@@ -129,6 +135,139 @@ document.addEventListener('DOMContentLoaded', function() {
         if (formatGrid.children.length === 0) {
             formatGrid.innerHTML = '<p class="empty-state">No output formats are currently available.</p>';
         }
+    }
+
+    async function startConversions() {
+        const formats = Array.from(
+            formatGrid.querySelectorAll('input[type="checkbox"]:checked')
+        ).map(input => input.value);
+
+        if (formats.length === 0) {
+            showNotification('Please select at least one output format', 'error');
+            return;
+        }
+
+        if (selectedFiles.length === 0) {
+            showNotification('Please select at least one PDF file', 'error');
+            return;
+        }
+
+        convertBtn.disabled = true;
+        convertBtn.textContent = 'Uploading Files...';
+        progressSection.style.display = 'block';
+        jobsList.innerHTML = '<p class="loading">Uploading selected PDF files...</p>';
+
+        try {
+            const uploadData = new FormData();
+            selectedFiles.forEach(file => uploadData.append('files', file));
+
+            const uploadResponse = await fetch('/upload/files', {
+                method: 'POST',
+                body: uploadData
+            });
+            const uploaded = await uploadResponse.json();
+
+            if (!uploadResponse.ok || !uploaded.success || !uploaded.uploaded?.length) {
+                throw new Error(uploaded.error || 'The selected files could not be uploaded');
+            }
+
+            if (uploaded.errors?.length) {
+                showNotification(`${uploaded.errors.length} file(s) could not be uploaded`, 'warning');
+            }
+
+            convertBtn.textContent = 'Starting Conversions...';
+            jobsList.innerHTML = '';
+            const jobs = [];
+
+            for (const file of uploaded.uploaded) {
+                const response = await fetch('/convert/start', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        file_path: file.file_path,
+                        filename: file.filename,
+                        file_size: file.file_size,
+                        page_count: file.page_count,
+                        formats
+                    })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || `Could not start conversion for ${file.filename}`);
+                }
+
+                jobs.push({id: data.job_id, filename: file.filename});
+                addJobCard(data.job_id, file.filename, formats);
+            }
+
+            convertBtn.textContent = 'Conversions Running...';
+            jobs.forEach(job => pollJobStatus(job.id, data => updateJobCard(job, data, formats)));
+            showNotification(`${jobs.length} conversion job(s) started`, 'success');
+        } catch (error) {
+            console.error('Conversion failed:', error);
+            showNotification(error.message || 'Conversion could not be started', 'error');
+            jobsList.innerHTML = '<p class="empty-state">No conversion jobs were started.</p>';
+            convertBtn.disabled = false;
+            convertBtn.textContent = 'Convert Selected Files';
+        }
+    }
+
+    function addJobCard(jobId, filename, formats) {
+        const card = document.createElement('div');
+        card.className = 'job-item';
+        card.id = `job-${jobId}`;
+        card.innerHTML = `
+            <div class="job-header">
+                <strong>${filename}</strong>
+                <span class="job-status">Queued</span>
+            </div>
+            <div class="job-progress">
+                <div class="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="job-output"></div>
+        `;
+        jobsList.appendChild(card);
+    }
+
+    function updateJobCard(job, data, formats) {
+        const card = document.getElementById(`job-${job.id}`);
+        if (!card) return;
+
+        const status = card.querySelector('.job-status');
+        const progress = card.querySelector('.progress-bar');
+        const output = card.querySelector('.job-output');
+        status.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+        progress.style.width = `${data.progress || 0}%`;
+
+        if (data.status === 'completed') {
+            output.innerHTML = data.outputs.map(item =>
+                `<a class="btn btn-primary" href="/convert/download/${job.id}/${encodeURIComponent(item.format)}">Download ${item.format.toUpperCase()}</a>`
+            ).join(' ');
+        } else if (data.status === 'failed') {
+            output.textContent = data.error || 'Conversion failed';
+            output.className = 'job-output error';
+        }
+
+        if (['completed', 'failed'].includes(data.status)) {
+            const active = Array.from(document.querySelectorAll('.job-status'))
+                .some(element => !['Completed', 'Failed'].includes(element.textContent));
+            if (!active) {
+                convertBtn.disabled = false;
+                convertBtn.textContent = 'Convert Selected Files';
+            }
+        }
+    }
+
+    function resetSelection() {
+        selectedFiles = [];
+        fileInput.value = '';
+        fileList.innerHTML = '';
+        formatGrid.innerHTML = '';
+        jobsList.innerHTML = '';
+        formatsSection.style.display = 'none';
+        progressSection.style.display = 'none';
+        convertBtn.disabled = false;
+        convertBtn.textContent = 'Convert Selected Files';
     }
     
     window.removeFile = function(idx) {

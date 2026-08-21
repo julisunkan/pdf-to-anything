@@ -1,1 +1,3 @@
 - [Anonymous format UI](anonymous-format-ui.md) — public format pickers must not depend on the authenticated formats API.
+- [SQLite security credentials](sqlite-security-credentials.md) — this deployment persists a session secret and salted admin hash in a separate SQLite table.
+- [Flask background jobs](flask-background-jobs.md) — worker threads must receive and enter the Flask app context before using current_app or database services.

@@ -66,7 +66,10 @@ def convert():
         job = JobService.create_job(filename, file_path, file_size, formats, page_count)
         
         # Start conversion
-        thread = threading.Thread(target=ConversionEngine.convert_pdf, args=(job.id, formats))
+        app = current_app._get_current_object()
+        thread = threading.Thread(
+            target=lambda: run_api_conversion(app, job.id, formats)
+        )
         thread.daemon = True
         thread.start()
         
@@ -78,6 +81,12 @@ def convert():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+def run_api_conversion(app, job_id, formats):
+    """Run API conversions with the Flask application context available."""
+    with app.app_context():
+        ConversionEngine.convert_pdf(job_id, formats)
 
 @api_bp.route('/jobs/<job_id>', methods=['GET'])
 @verify_api_key

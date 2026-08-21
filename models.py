@@ -80,6 +80,16 @@ class Setting(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+class SecurityCredential(db.Model):
+    """Bootstrap credentials kept separate from user-facing application settings."""
+    __tablename__ = 'security_credentials'
+
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = db.Column(db.String(100), unique=True, nullable=False, index=True)
+    value = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
 class FormatSetting(db.Model):
     """Settings for individual conversion formats"""
     __tablename__ = 'format_settings'

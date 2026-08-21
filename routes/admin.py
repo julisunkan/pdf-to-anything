@@ -1,12 +1,11 @@
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
 from functools import wraps
 from services.settings_service import SettingsService
+from services.security_service import SecurityService
 from services.job_service import JobService
 from services.format_service import FormatService
 from services.cleanup_service import CleanupService
 from models import db, ConversionJob, SystemLog
-import hashlib
-import os
 from datetime import datetime
 
 admin_bp = Blueprint('admin', __name__)
@@ -27,9 +26,10 @@ def login():
     
     if request.method == 'POST':
         password = request.form.get('password')
-        admin_password = current_app.config['ADMIN_PASSWORD']
-        
-        if password == admin_password:
+        if SecurityService.verify_admin_password(
+            password,
+            current_app.config.get('ADMIN_PASSWORD'),
+        ):
             session['admin_authenticated'] = True
             return redirect(url_for('admin.dashboard'))
         else:

@@ -8,10 +8,10 @@ import zipfile
 
 convert_bp = Blueprint('convert', __name__, url_prefix='/convert')
 
-def run_conversion(job_id, formats):
+def run_conversion(app, job_id, formats):
     """Run conversion in background"""
-    engine = ConversionEngine()
-    engine.convert_pdf(job_id, formats)
+    with app.app_context():
+        ConversionEngine.convert_pdf(job_id, formats)
 
 @convert_bp.route('/start', methods=['POST'])
 def start_conversion():
@@ -41,7 +41,8 @@ def start_conversion():
         job = JobService.create_job(filename, file_path, file_size, output_formats, page_count)
         
         # Start conversion in background
-        thread = threading.Thread(target=run_conversion, args=(job.id, output_formats))
+        app = current_app._get_current_object()
+        thread = threading.Thread(target=run_conversion, args=(app, job.id, output_formats))
         thread.daemon = True
         thread.start()
         

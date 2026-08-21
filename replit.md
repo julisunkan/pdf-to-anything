@@ -8,8 +8,8 @@
 
 ## Environment
 
-- `SESSION_SECRET` is used as the Flask secret key when `SECRET_KEY` is not set.
-- `ADMIN_PASSWORD` can be set as a Replit Secret to protect the admin panel.
+- Security credentials use the SQLite-backed mode: the session secret is generated once and persisted in the `security_credentials` table, and the admin password is stored only as a salted hash there.
+- `SECRET_KEY` and `ADMIN_PASSWORD` environment overrides are intentionally not used by this mode.
 - The app uses the Replit-provided database URL when available, otherwise it falls back to SQLite.
 
 ## Notes

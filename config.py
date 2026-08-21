@@ -6,7 +6,10 @@ load_dotenv()
 
 class Config:
     """Base configuration"""
-    SECRET_KEY = os.getenv('SECRET_KEY') or os.getenv('SESSION_SECRET', 'dev-secret-key-change-in-production')
+    # SecurityService owns the session key in SQLite for this deployment.
+    # An explicit SECRET_KEY remains a compatibility override; SESSION_SECRET
+    # is intentionally not read in SQLite-backed mode.
+    SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///pdf_to_anything.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
@@ -42,7 +45,8 @@ class Config:
     CONVERSION_TIMEOUT_SECONDS = int(os.getenv('CONVERSION_TIMEOUT_SECONDS', 300))
     
     # Admin
-    ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'admin-password-please-change')
+    # The admin credential is managed as a salted hash in SQLite.
+    ADMIN_PASSWORD = None
     
     # PWA
     PWA_ENABLED = os.getenv('PWA_ENABLED', 'True') == 'True'

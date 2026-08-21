@@ -24,6 +24,10 @@ def create_app():
         # Create database tables
         db.create_all()
         
+        # Load persistent security credentials without exposing them as settings.
+        from services.security_service import SecurityService
+        SecurityService.initialize(app)
+
         # Initialize default settings
         from services.settings_service import SettingsService
         SettingsService.initialize_defaults()
