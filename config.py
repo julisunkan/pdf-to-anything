@@ -6,7 +6,7 @@ load_dotenv()
 
 class Config:
     """Base configuration"""
-    SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
+    SECRET_KEY = os.getenv('SECRET_KEY') or os.getenv('SESSION_SECRET', 'dev-secret-key-change-in-production')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///pdf_to_anything.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     

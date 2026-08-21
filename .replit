@@ -4,7 +4,32 @@ modules = ["python-3.12", "web", "nodejs-20", "bash"]
 
 [nix]
 channel = "stable-25_05"
+packages = ["cargo", "freetype", "glibcLocales", "imagemagickBig", "lcms2", "libiconv", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "libyaml", "openjpeg", "openssl", "pkg-config", "poppler_utils", "rustc", "tcl", "tk", "xcodebuild", "zlib", "poppler-utils"]
 
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
