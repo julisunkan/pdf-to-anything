@@ -1,8 +1,9 @@
 run = "python app.py"
 entrypoint = "app.py"
+modules = ["python-3.12", "web", "nodejs-20", "bash"]
 
 [nix]
-channel = "unstable"
+channel = "stable-25_05"
 
 [[ports]]
 localPort = 5000
