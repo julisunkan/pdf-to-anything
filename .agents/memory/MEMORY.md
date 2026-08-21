@@ -2,3 +2,4 @@
 - [SQLite security credentials](sqlite-security-credentials.md) — this deployment persists a session secret and salted admin hash in a separate SQLite table.
 - [Flask background jobs](flask-background-jobs.md) — worker threads must receive and enter the Flask app context before using current_app or database services.
 - [Flask PWA service worker scope](flask-pwa-service-worker.md) — root-scoped workers must be served from an origin-root route, not only from `/static/`.
+- [Python dependency pinning](python-dependency-pinning.md) — duplicate pinned and unpinned requirements can make Replit package resolution fail.

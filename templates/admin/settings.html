@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Settings - PDF to Anything{% endblock %}
+{% block content %}
+<div class="admin-container">
+    <h1>Application Settings</h1>
+    <form id="settingsForm" class="admin-section">
+        {% for key, value in settings.items() %}
+        <label class="form-group">
+            <span>{{ key.replace('_', ' ').title() }}</span>
+            <input name="{{ key }}" value="{{ value }}">
+        </label>
+        {% endfor %}
+        <button class="btn btn-primary" type="submit">Save Settings</button>
+        <p id="settingsStatus" role="status"></p>
+    </form>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.getElementById('settingsForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
+    const response = await fetch('{{ url_for("admin.update_settings") }}', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRF-Token': '{{ csrf_token }}'},
+        body: JSON.stringify(data)
+    });
+    document.getElementById('settingsStatus').textContent =
+        response.ok ? 'Settings saved.' : 'Settings could not be saved.';
+});
+</script>
+{% endblock %}

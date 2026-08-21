@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Extract PDF Text - PDF to Anything{% endblock %}
+{% block content %}
+<div class="container tool-page"><section class="hero"><div class="hero-content">
+    <h1>Extract PDF text</h1><p>Upload a PDF and copy its extractable text.</p>
+</div></section><section class="upload-section">
+    <form id="extractForm" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".pdf,application/pdf" required>
+        <button class="btn btn-primary" type="submit">Extract Text</button>
+    </form>
+    <textarea id="extractedText" rows="18" style="width:100%;margin-top:1rem" readonly></textarea>
+    <p id="extractStatus" role="status"></p>
+</section></div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.getElementById('extractForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const response = await fetch('{{ url_for("tools.extract_text") }}', {
+        method: 'POST', body: new FormData(event.target)
+    });
+    const data = await response.json();
+    document.getElementById('extractStatus').textContent = data.error || 'Text extracted.';
+    if (response.ok) document.getElementById('extractedText').value = data.text;
+});
+</script>
+{% endblock %}

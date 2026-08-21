@@ -115,8 +115,12 @@ class TestAdmin:
     def test_admin_authentication(self, client, app):
         """Test admin authentication"""
         with app.test_client() as c:
+            c.get('/admin/login')
+            with c.session_transaction() as session:
+                csrf_token = session['csrf_token']
             response = c.post('/admin/login', data={
-                'password': app.config['ADMIN_PASSWORD']
+                'password': app.config['ADMIN_PASSWORD'],
+                'csrf_token': csrf_token,
             })
             # Should redirect to dashboard
             assert response.status_code in [200, 302]

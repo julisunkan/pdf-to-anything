@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Split PDFs - PDF to Anything{% endblock %}
+{% block content %}
+<div class="container tool-page"><section class="hero"><div class="hero-content">
+    <h1>Split a PDF</h1><p>Split a PDF into one-page files and download them as a ZIP.</p>
+</div></section><section class="upload-section">
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".pdf,application/pdf" required>
+        <button class="btn btn-primary" type="submit">Split PDF</button>
+    </form>
+</section></div>
+{% endblock %}

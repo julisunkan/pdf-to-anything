@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Cleanup Logs - PDF to Anything{% endblock %}
+{% block content %}
+<div class="admin-container">
+    <h1>Cleanup Logs</h1>
+    <table class="admin-table">
+        <thead><tr><th>Time</th><th>Status</th><th>Jobs</th><th>Files</th><th>Space Freed</th><th>Message</th></tr></thead>
+        <tbody>{% for log in logs %}
+        <tr><td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M') }}</td><td>{{ log.status }}</td>
+            <td>{{ log.jobs_deleted }}</td><td>{{ log.files_deleted }}</td>
+            <td>{{ (log.space_freed_bytes / 1024 / 1024)|round(2) }} MB</td><td>{{ log.message }}</td></tr>
+        {% else %}<tr><td colspan="6">No cleanup logs yet.</td></tr>{% endfor %}</tbody>
+    </table>
+</div>
+{% endblock %}

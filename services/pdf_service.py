@@ -73,7 +73,7 @@ class PDFService:
                     if page_num < len(reader.pages):
                         page = reader.pages[page_num]
                         text += f"\n--- Page {page_num + 1} ---\n"
-                        text += page.extract_text()
+                        text += page.extract_text() or ""
                 
                 return text
         except Exception as e:
@@ -184,4 +184,20 @@ class PDFService:
                 return True
         except Exception as e:
             print(f"Error deleting pages: {e}")
+            return False
+
+    @staticmethod
+    def rewrite_pdf(pdf_path, output_path):
+        """Rewrite a PDF into a fresh file for basic optimization/compression."""
+        try:
+            with open(pdf_path, 'rb') as source:
+                reader = PyPDF2.PdfReader(source)
+                writer = PyPDF2.PdfWriter()
+                for page in reader.pages:
+                    writer.add_page(page)
+                with open(output_path, 'wb') as target:
+                    writer.write(target)
+            return True
+        except Exception as e:
+            print(f"Error rewriting PDF: {e}")
             return False

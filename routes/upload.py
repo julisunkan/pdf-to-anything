@@ -1,10 +1,6 @@
-from flask import Blueprint, request, jsonify, current_app, send_file
-import os
-import uuid
-from werkzeug.utils import secure_filename
-from services.job_service import JobService
+from flask import Blueprint, request, jsonify, current_app
 from services.pdf_service import PDFService
-from services.format_service import FormatService
+from services.file_service import FileService
 
 upload_bp = Blueprint('upload', __name__, url_prefix='/upload')
 
@@ -27,40 +23,23 @@ def upload_file():
         if not allowed_file(file.filename):
             return jsonify({'success': False, 'error': 'Only PDF files allowed'}), 400
         
-        # Check file size
-        max_size = current_app.config['MAX_UPLOAD_SIZE_BYTES']
-        file.seek(0, os.SEEK_END)
-        file_size = file.tell()
-        file.seek(0)
-        
-        if file_size > max_size:
-            return jsonify({'success': False, 'error': f'File exceeds maximum size of {current_app.config["MAX_UPLOAD_SIZE_MB"]}MB'}), 400
-        
-        # Save file
-        upload_folder = current_app.config['UPLOAD_FOLDER']
-        os.makedirs(upload_folder, exist_ok=True)
-        
-        filename = secure_filename(file.filename)
-        unique_filename = f"{uuid.uuid4().hex}_{filename}"
-        file_path = os.path.join(upload_folder, unique_filename)
-        
-        file.save(file_path)
-        
-        # Analyze PDF
-        page_count = PDFService.get_page_count(file_path)
-        has_text = PDFService.has_text(file_path)
+        upload = FileService.save_pdf(file)
+        has_text = PDFService.has_text(upload['path'])
         
         return jsonify({
             'success': True,
-            'file_path': file_path,
-            'filename': filename,
-            'file_size': file_size,
-            'page_count': page_count,
+            'upload_id': upload['upload_id'],
+            'filename': upload['filename'],
+            'file_size': upload['file_size'],
+            'page_count': upload['page_count'],
             'has_text': has_text
         })
     
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
+    except ValueError as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+    except Exception:
+        current_app.logger.exception('PDF upload failed')
+        return jsonify({'success': False, 'error': 'The PDF could not be uploaded'}), 500
 
 @upload_bp.route('/files', methods=['POST'])
 def upload_files():
@@ -72,6 +51,8 @@ def upload_files():
         files = request.files.getlist('files')
         max_files = current_app.config['MAX_FILES_PER_UPLOAD']
         
+        if not files:
+            return jsonify({'success': False, 'error': 'No files selected'}), 400
         if len(files) > max_files:
             return jsonify({'success': False, 'error': f'Maximum {max_files} files allowed'}), 400
         
@@ -83,33 +64,14 @@ def upload_files():
         
         for file in files:
             try:
-                if not allowed_file(file.filename):
-                    errors.append({'file': file.filename, 'error': 'Invalid file type'})
-                    continue
-                
-                file.seek(0, os.SEEK_END)
-                file_size = file.tell()
-                file.seek(0)
-                
-                max_size = current_app.config['MAX_UPLOAD_SIZE_BYTES']
-                if file_size > max_size:
-                    errors.append({'file': file.filename, 'error': 'File too large'})
-                    continue
-                
-                filename = secure_filename(file.filename)
-                unique_filename = f"{uuid.uuid4().hex}_{filename}"
-                file_path = os.path.join(upload_folder, unique_filename)
-                
-                file.save(file_path)
-                
-                page_count = PDFService.get_page_count(file_path)
-                has_text = PDFService.has_text(file_path)
+                upload = FileService.save_pdf(file)
+                has_text = PDFService.has_text(upload['path'])
                 
                 uploaded.append({
-                    'file_path': file_path,
-                    'filename': filename,
-                    'file_size': file_size,
-                    'page_count': page_count,
+                    'upload_id': upload['upload_id'],
+                    'filename': upload['filename'],
+                    'file_size': upload['file_size'],
+                    'page_count': upload['page_count'],
                     'has_text': has_text
                 })
             except Exception as e:
@@ -121,5 +83,6 @@ def upload_files():
             'errors': errors
         })
     
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
+    except Exception:
+        current_app.logger.exception('Bulk PDF upload failed')
+        return jsonify({'success': False, 'error': 'The PDFs could not be uploaded'}), 500

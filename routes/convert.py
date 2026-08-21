@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app
 from services.job_service import JobService
 from services.format_service import FormatService
+from services.file_service import FileService
 from converters.conversion_engine import ConversionEngine
 import os
 import threading
@@ -19,26 +20,33 @@ def start_conversion():
     try:
         data = request.get_json()
         
-        file_path = data.get('file_path')
+        upload_id = data.get('upload_id')
         filename = data.get('filename')
         file_size = data.get('file_size')
         output_formats = data.get('formats', [])
         page_count = data.get('page_count', 0)
         
         # Validate
-        if not file_path or not filename or not output_formats:
+        if not upload_id or not filename or not output_formats:
             return jsonify({'success': False, 'error': 'Missing required fields'}), 400
-        
-        if not os.path.exists(file_path):
-            return jsonify({'success': False, 'error': 'File not found'}), 400
+
+        file_path = FileService.resolve_upload(upload_id)
+        if not file_path:
+            return jsonify({'success': False, 'error': 'Upload not found'}), 400
+        try:
+            page_count = FileService.validate_pdf_path(file_path)
+        except ValueError as error:
+            return jsonify({'success': False, 'error': str(error)}), 400
+        file_size = file_path.stat().st_size
         
         # Check formats are enabled
+        output_formats = list(dict.fromkeys(output_formats))
         for fmt in output_formats:
             if not FormatService.is_format_enabled(fmt):
                 return jsonify({'success': False, 'error': f'Format {fmt} is not available'}), 400
         
         # Create job
-        job = JobService.create_job(filename, file_path, file_size, output_formats, page_count)
+        job = JobService.create_job(filename, str(file_path), file_size, output_formats, page_count)
         
         # Start conversion in background
         app = current_app._get_current_object()

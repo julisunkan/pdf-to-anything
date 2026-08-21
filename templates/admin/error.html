@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Admin Error - PDF to Anything{% endblock %}
+{% block content %}
+<div class="admin-container">
+    <h1>Something went wrong</h1>
+    <p>{{ error }}</p>
+    <a class="btn btn-secondary" href="{{ url_for('admin.dashboard') }}">Back to dashboard</a>
+</div>
+{% endblock %}

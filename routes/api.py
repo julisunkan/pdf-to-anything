@@ -9,7 +9,13 @@ import zipfile
 from services.job_service import JobService
 from services.format_service import FormatService
 from converters.conversion_engine import ConversionEngine
+from services.file_service import FileService
+from datetime import datetime
 import threading
+import time
+
+_RATE_LIMIT_BUCKETS = {}
+_RATE_LIMIT_LOCK = threading.Lock()
 
 api_bp = Blueprint('api', __name__)
 
@@ -28,6 +34,22 @@ def verify_api_key(f):
         
         if not api_key_obj:
             return jsonify({'error': 'Invalid API key'}), 401
+
+        now = time.monotonic()
+        window = current_app.config['API_RATE_LIMIT_WINDOW']
+        limit = api_key_obj.rate_limit or current_app.config['API_RATE_LIMIT']
+        with _RATE_LIMIT_LOCK:
+            bucket = [
+                timestamp for timestamp in _RATE_LIMIT_BUCKETS.get(api_key_obj.id, [])
+                if now - timestamp < window
+            ]
+            if len(bucket) >= limit:
+                return jsonify({'error': 'API rate limit exceeded'}), 429
+            bucket.append(now)
+            _RATE_LIMIT_BUCKETS[api_key_obj.id] = bucket
+
+        api_key_obj.last_used = datetime.utcnow()
+        db.session.commit()
         
         return f(*args, **kwargs)
     return decorated_function
@@ -41,29 +63,27 @@ def convert():
             return jsonify({'error': 'No file provided'}), 400
         
         file = request.files['file']
+        if not file.filename or not file.filename.lower().endswith('.pdf'):
+            return jsonify({'error': 'Only PDF files are allowed'}), 400
         formats = request.form.getlist('formats')
         
         if not formats:
             return jsonify({'error': 'No formats specified'}), 400
         
-        # Upload file
-        upload_folder = current_app.config['UPLOAD_FOLDER']
-        os.makedirs(upload_folder, exist_ok=True)
-        
-        import uuid
-        from werkzeug.utils import secure_filename
-        
-        filename = secure_filename(file.filename)
-        unique_filename = f"{uuid.uuid4().hex}_{filename}"
-        file_path = os.path.join(upload_folder, unique_filename)
-        file.save(file_path)
-        
-        file_size = os.path.getsize(file_path)
-        
-        # Create job
-        from services.pdf_service import PDFService
-        page_count = PDFService.get_page_count(file_path)
-        job = JobService.create_job(filename, file_path, file_size, formats, page_count)
+        formats = list(dict.fromkeys(formats))
+        for fmt in formats:
+            if not FormatService.is_format_enabled(fmt):
+                return jsonify({'error': f'Format {fmt} is not available'}), 400
+
+        try:
+            upload = FileService.save_pdf(file)
+        except ValueError as error:
+            return jsonify({'error': str(error)}), 400
+
+        job = JobService.create_job(
+            upload['filename'], str(upload['path']), upload['file_size'],
+            formats, upload['page_count']
+        )
         
         # Start conversion
         app = current_app._get_current_object()

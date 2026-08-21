@@ -61,7 +61,10 @@
 <script>
 function runCleanup() {
     if (confirm('Run cleanup? This will delete expired files.')) {
-        fetch('{{ url_for("admin.run_cleanup") }}', { method: 'POST' })
+        fetch('{{ url_for("admin.run_cleanup") }}', {
+            method: 'POST',
+            headers: {'X-CSRF-Token': '{{ csrf_token }}'}
+        })
             .then(r => r.json())
             .then(data => alert(JSON.stringify(data)));
     }

@@ -1,11 +1,11 @@
-from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for, current_app
 from functools import wraps
 from services.settings_service import SettingsService
 from services.security_service import SecurityService
 from services.job_service import JobService
 from services.format_service import FormatService
 from services.cleanup_service import CleanupService
-from models import db, ConversionJob, SystemLog
+from models import db, ConversionJob, SystemLog, FormatSetting
 from datetime import datetime
 
 admin_bp = Blueprint('admin', __name__)
@@ -19,12 +19,20 @@ def require_admin(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def require_csrf():
+    expected = session.get('csrf_token')
+    supplied = request.form.get('csrf_token') or request.headers.get('X-CSRF-Token')
+    if not expected or not supplied or not __import__('hmac').compare_digest(expected, supplied):
+        return jsonify({'success': False, 'error': 'Invalid security token'}), 403
+    return None
+
 @admin_bp.route('/login', methods=['GET', 'POST'])
 def login():
     """Admin login"""
-    from flask import current_app
-    
     if request.method == 'POST':
+        csrf_error = require_csrf()
+        if csrf_error:
+            return csrf_error
         password = request.form.get('password')
         if SecurityService.verify_admin_password(
             password,
@@ -93,6 +101,9 @@ def job_detail(job_id):
 @require_admin
 def delete_job(job_id):
     """Delete a job"""
+    csrf_error = require_csrf()
+    if csrf_error:
+        return csrf_error
     JobService.delete_job(job_id)
     return redirect(url_for('admin.jobs'))
 
@@ -104,7 +115,7 @@ def formats():
     format_settings = {}
     
     for fmt_name in formats.keys():
-        fmt_setting = db.session.query(db.func.count()).filter_by(format_name=fmt_name).scalar()
+        fmt_setting = FormatSetting.query.filter_by(format_name=fmt_name).first()
         format_settings[fmt_name] = fmt_setting
     
     return render_template('admin/formats.html', formats=formats, format_settings=format_settings)
@@ -113,6 +124,11 @@ def formats():
 @require_admin
 def toggle_format(format_name):
     """Toggle format availability"""
+    csrf_error = require_csrf()
+    if csrf_error:
+        return csrf_error
+    if format_name not in FormatService.AVAILABLE_FORMATS:
+        return jsonify({'success': False, 'error': 'Unknown format'}), 404
     enabled = request.form.get('enabled') == 'true'
     
     if enabled:
@@ -134,7 +150,12 @@ def settings():
 def update_settings():
     """Update settings"""
     try:
+        csrf_error = require_csrf()
+        if csrf_error:
+            return csrf_error
         data = request.get_json()
+        if not isinstance(data, dict):
+            return jsonify({'success': False, 'error': 'JSON object required'}), 400
         
         for key, value in data.items():
             SettingsService.set(key, value)
@@ -147,6 +168,9 @@ def update_settings():
 @require_admin
 def run_cleanup():
     """Run cleanup"""
+    csrf_error = require_csrf()
+    if csrf_error:
+        return csrf_error
     result = CleanupService.cleanup_expired_jobs()
     return jsonify(result)
 

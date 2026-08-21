@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}System Logs - PDF to Anything{% endblock %}
+{% block content %}
+<div class="admin-container">
+    <h1>System Logs</h1>
+    <table class="admin-table">
+        <thead><tr><th>Time</th><th>Level</th><th>Component</th><th>Message</th></tr></thead>
+        <tbody>{% for log in logs.items %}
+        <tr><td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M') }}</td><td>{{ log.level }}</td>
+            <td>{{ log.component }}</td><td>{{ log.message }}</td></tr>
+        {% else %}<tr><td colspan="4">No system logs yet.</td></tr>{% endfor %}</tbody>
+    </table>
+    <div class="pagination">
+        {% if logs.has_prev %}<a href="?page={{ logs.prev_num }}">Previous</a>{% endif %}
+        Page {{ logs.page }} of {{ logs.pages }}
+        {% if logs.has_next %}<a href="?page={{ logs.next_num }}">Next</a>{% endif %}
+    </div>
+</div>
+{% endblock %}

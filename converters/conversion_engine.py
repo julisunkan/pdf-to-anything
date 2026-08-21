@@ -34,8 +34,18 @@ class ConversionEngine:
                     
                     # Generate output filename
                     base_name = Path(job.original_filename).stem
-                    output_filename = f"{base_name}.{format_name}"
-                    output_path = os.path.join(current_app.config['OUTPUT_FOLDER'], output_filename)
+                    extension = {
+                        'pdf_compressed': 'pdf',
+                        'pdf_optimized': 'pdf',
+                        'pdf_a': 'pdf',
+                        'pdf_searchable': 'pdf',
+                    }.get(format_name, format_name)
+                    output_filename = f"{base_name}.{extension}"
+                    job_output_dir = os.path.join(
+                        current_app.config['OUTPUT_FOLDER'], job.id
+                    )
+                    os.makedirs(job_output_dir, exist_ok=True)
+                    output_path = os.path.join(job_output_dir, output_filename)
                     
                     # Convert
                     JobService.log(job_id, 'INFO', f'Converting to {format_name}...')

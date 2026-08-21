@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Manage Formats - PDF to Anything{% endblock %}
+{% block content %}
+<div class="admin-container">
+    <h1>Manage Formats</h1>
+    <table class="admin-table">
+        <thead><tr><th>Format</th><th>Description</th><th>Available</th><th>Enabled</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for name, info in formats.items() %}
+        {% set setting = format_settings.get(name) %}
+        <tr>
+            <td>{{ name|upper }}</td><td>{{ info.description }}</td>
+            <td>{{ 'Yes' if setting and setting.is_available else 'No' }}</td>
+            <td>{{ 'Yes' if setting and setting.enabled else 'No' }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin.toggle_format', format_name=name) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="enabled" value="{{ 'false' if setting and setting.enabled else 'true' }}">
+                    <button class="btn btn-secondary" type="submit">
+                        {{ 'Disable' if setting and setting.enabled else 'Enable' }}
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

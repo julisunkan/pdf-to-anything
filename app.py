@@ -1,6 +1,7 @@
 import os
 import sys
-from flask import Flask, send_from_directory
+import secrets
+from flask import Flask, send_from_directory, session
 from flask_sqlalchemy import SQLAlchemy
 from config import get_config
 from models import db
@@ -41,6 +42,9 @@ def create_app():
         # Initialize format settings
         from services.format_service import FormatService
         FormatService.initialize_formats()
+        if app.config.get('AUTO_CLEANUP', True):
+            from services.cleanup_service import CleanupService
+            CleanupService.cleanup_expired_jobs()
     
     # Register blueprints
     from routes.main import main_bp
@@ -64,6 +68,7 @@ def create_app():
     def before_request():
         from flask import session
         session.permanent = True
+        session.setdefault("csrf_token", secrets.token_urlsafe(32))
     
     # Error handlers
     @app.errorhandler(404)
@@ -79,7 +84,8 @@ def create_app():
     def inject_config():
         return {
             'app_name': app.config.get('APP_NAME', 'PDF to Anything'),
-            'pwa_enabled': app.config.get('PWA_ENABLED', True)
+            'pwa_enabled': app.config.get('PWA_ENABLED', True),
+            'csrf_token': session.get('csrf_token'),
         }
     
     return app

@@ -27,6 +27,7 @@
                 <td>
                     <a href="{{ url_for('admin.job_detail', job_id=job.id) }}">View</a>
                     <form method="POST" action="{{ url_for('admin.delete_job', job_id=job.id) }}" style="display: inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                         <button type="submit" onclick="return confirm('Delete this job?')">Delete</button>
                     </form>
                 </td>

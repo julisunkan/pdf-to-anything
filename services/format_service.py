@@ -109,6 +109,13 @@ class FormatService:
         if not fmt:
             return True  # Default to enabled if not in database
         return fmt.enabled and fmt.is_available
+
+    @staticmethod
+    def get_format_settings():
+        return {
+            fmt.format_name: fmt
+            for fmt in FormatSetting.query.order_by(FormatSetting.format_name).all()
+        }
     
     @staticmethod
     def enable_format(format_name):
