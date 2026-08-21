@@ -88,6 +88,72 @@ document.addEventListener('DOMContentLoaded', function() {
     const availableFormats = {{ formats|tojson }};
     
     let selectedFiles = [];
+
+    renderSupportedFormats();
+
+    function renderSupportedFormats() {
+        const groups = {
+            documentCategory: {
+                title: 'Documents & ebooks',
+                icon: '▤',
+                formats: [
+                    ...(availableFormats.document || []),
+                    ...(availableFormats.ebook || [])
+                ]
+            },
+            imageCategory: {
+                title: 'Images',
+                icon: '◉',
+                formats: availableFormats.image || []
+            },
+            spreadsheetCategory: {
+                title: 'Spreadsheets',
+                icon: '▦',
+                formats: availableFormats.spreadsheet || []
+            },
+            dataCategory: {
+                title: 'Data & PDF tools',
+                icon: '{}',
+                formats: [
+                    ...(availableFormats.data || []),
+                    ...(availableFormats.presentation || []),
+                    ...(availableFormats.pdf_tool || [])
+                ]
+            }
+        };
+
+        Object.entries(groups).forEach(([elementId, group]) => {
+            const card = document.getElementById(elementId);
+            if (!card) return;
+
+            card.innerHTML = '';
+
+            const heading = document.createElement('div');
+            heading.className = 'category-heading';
+            heading.innerHTML = `<span class="category-icon" aria-hidden="true">${group.icon}</span>
+                <h3>${group.title}</h3>`;
+            card.appendChild(heading);
+
+            const list = document.createElement('div');
+            list.className = 'category-formats';
+            group.formats.forEach(format => {
+                const pill = document.createElement('span');
+                pill.className = 'format-pill';
+                pill.textContent = format.name.toUpperCase();
+                pill.title = format.description;
+                list.appendChild(pill);
+            });
+
+            if (!group.formats.length) {
+                const empty = document.createElement('span');
+                empty.className = 'format-pill muted';
+                empty.textContent = 'Coming soon';
+                list.appendChild(empty);
+            }
+
+            card.appendChild(list);
+        });
+    }
     
     // File upload handlers
     browseBtn.addEventListener('click', () => fileInput.click());
