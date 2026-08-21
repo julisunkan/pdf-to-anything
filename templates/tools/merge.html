@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Merge PDFs - PDF to Anything{% endblock %}
+
+{% block content %}
+<div class="container tool-page">
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Merge PDF files</h1>
+            <p>Combine multiple PDF files into one document.</p>
+        </div>
+    </section>
+
+    <section class="upload-section">
+        <form id="mergeForm" enctype="multipart/form-data">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📄</div>
+                <h2>Select PDFs to merge</h2>
+                <p>Choose at least two files. They will be merged in the order shown below.</p>
+                <input type="file" id="fileInput" name="files" accept=".pdf,application/pdf" multiple hidden>
+                <button type="button" class="btn btn-primary" id="browseBtn">Browse PDF files</button>
+            </div>
+
+            <div id="fileList" class="file-list" aria-live="polite"></div>
+            <div class="action-buttons">
+                <button type="submit" class="btn btn-success" id="mergeBtn" disabled>Merge PDFs</button>
+                <button type="button" class="btn btn-secondary" id="clearBtn" disabled>Clear</button>
+            </div>
+            <p id="status" class="empty-state" role="status"></p>
+        </form>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('fileInput');
+    const browse = document.getElementById('browseBtn');
+    const area = document.getElementById('uploadArea');
+    const list = document.getElementById('fileList');
+    const form = document.getElementById('mergeForm');
+    const merge = document.getElementById('mergeBtn');
+    const clear = document.getElementById('clearBtn');
+    const status = document.getElementById('status');
+    let files = [];
+
+    browse.addEventListener('click', () => input.click());
+    input.addEventListener('change', () => {
+        files = Array.from(input.files).filter(file =>
+            file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
+        );
+        render();
+    });
+    area.addEventListener('dragover', event => { event.preventDefault(); area.classList.add('dragover'); });
+    area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+    area.addEventListener('drop', event => {
+        event.preventDefault();
+        area.classList.remove('dragover');
+        files = Array.from(event.dataTransfer.files).filter(file => file.name.toLowerCase().endsWith('.pdf'));
+        render();
+    });
+    clear.addEventListener('click', () => { files = []; input.value = ''; render(); });
+
+    function render() {
+        list.innerHTML = files.length
+            ? '<h3>Files to merge</h3>' + files.map((file, index) =>
+                `<div class="file-item"><span>${index + 1}. ${escapeHtml(file.name)}</span>` +
+                `<span class="file-size">${formatBytes(file.size)}</span></div>`).join('')
+            : '';
+        merge.disabled = files.length < 2;
+        clear.disabled = files.length === 0;
+        status.textContent = files.length === 1 ? 'Select one more PDF to continue.' : '';
+    }
+
+    form.addEventListener('submit', async event => {
+        event.preventDefault();
+        if (files.length < 2) return;
+        merge.disabled = true;
+        clear.disabled = true;
+        status.textContent = 'Merging your PDFs...';
+        const data = new FormData();
+        files.forEach(file => data.append('files', file));
+        try {
+            const response = await fetch('/tools/merge', { method: 'POST', body: data });
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({}));
+                throw new Error(error.error || 'The PDFs could not be merged.');
+            }
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'merged.pdf';
+            link.click();
+            URL.revokeObjectURL(url);
+            status.textContent = 'Your merged PDF has been downloaded.';
+        } catch (error) {
+            status.textContent = error.message;
+        } finally {
+            merge.disabled = false;
+            clear.disabled = false;
+        }
+    });
+
+    function formatBytes(bytes) {
+        return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+    }
+    function escapeHtml(value) {
+        return value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+    }
+});
+</script>
+{% endblock %}
