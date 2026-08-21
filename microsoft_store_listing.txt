@@ -1,0 +1,302 @@
+MICROSOFT STORE MARKETING COPY
+PDF TO ANYTHING
+============================================================
+
+LISTING POSITIONING
+------------------------------------------------------------
+PDF to Anything is a privacy-minded PDF conversion and document
+productivity tool for people who need to turn PDFs into editable
+documents, spreadsheets, images, ebooks, presentations, and
+structured data. It also includes practical PDF management tools
+for combining, splitting, extracting, compressing, and preparing
+PDF files.
+
+
+APP TITLE
+------------------------------------------------------------
+PDF to Anything – Convert, Edit & Organize PDFs
+
+
+ALTERNATIVE TITLES
+------------------------------------------------------------
+PDF Converter & PDF Tools
+PDF to Word, Excel, Images & More
+All-in-One PDF Converter
+PDF Converter with OCR
+
+
+SHORT DESCRIPTION
+------------------------------------------------------------
+Convert PDFs to 25+ formats, process files in bulk, use OCR, and
+merge, split, extract, compress, or optimize PDFs in one place.
+
+
+ALTERNATIVE SHORT DESCRIPTIONS
+------------------------------------------------------------
+1. Turn PDFs into Word, Excel, images, ebooks, presentations,
+   JSON, XML, and more—with built-in PDF tools and OCR.
+
+2. A versatile PDF workspace for conversion, document extraction,
+   bulk processing, and everyday PDF organization.
+
+3. Convert, organize, and extract content from PDFs without
+   juggling multiple tools.
+
+
+FULL STORE DESCRIPTION
+------------------------------------------------------------
+PDF TO ANYTHING: ONE WORKSPACE FOR YOUR PDF TASKS
+
+PDF to Anything helps you get more from your PDF files. Convert
+documents into the formats you use every day, process multiple
+files in one workflow, and handle common PDF tasks without
+switching between separate applications.
+
+Whether you need an editable Word document, an Excel spreadsheet,
+an image for sharing, an ebook for reading, or structured data for
+your workflow, PDF to Anything brings the conversion tools
+together in one convenient workspace.
+
+CONVERT PDFs INTO THE FORMATS YOU NEED
+
+Choose from a broad collection of output formats, including:
+
+• DOCX, ODT, RTF, TXT, HTML, and Markdown
+• XLSX, CSV, and ODS spreadsheets
+• PPTX and ODP presentations
+• EPUB and MOBI ebooks
+• JPG/JPEG, PNG, WebP, TIFF, BMP, and SVG images
+• JSON, XML, and YAML structured data
+• Compressed, optimized, archival, and searchable PDF outputs
+
+PROCESS ONE FILE OR MANY
+
+Upload multiple PDFs for bulk conversion and select multiple
+output formats for a single source file. This makes it easier to
+prepare files for editing, sharing, archiving, publishing, or
+downstream data processing.
+
+BRING SCANNED PDFs TO LIFE WITH OCR
+
+OCR support can help convert scanned or image-based PDFs into
+searchable, more usable documents. Extract text from PDFs and
+make information easier to reuse in your preferred document
+workflow.
+
+EVERYDAY PDF TOOLS
+
+Use the built-in PDF utilities to:
+
+• Merge multiple PDFs into one file
+• Split PDFs into separate documents
+• Extract selected pages
+• Extract text from PDF files
+• Rotate pages
+• Delete unwanted pages
+• Compress PDFs for easier sharing
+• Optimize PDFs for practical storage and delivery
+• Prepare searchable PDFs with OCR
+
+TRACK YOUR CONVERSION JOBS
+
+Follow conversion progress and review job status from the app.
+Download individual results or collect all generated formats in
+one ZIP download when a job is complete.
+
+DESIGNED FOR SIMPLE, PRIVATE PROCESSING
+
+PDF to Anything is designed for straightforward, anonymous
+processing without requiring an account for regular use. Uploaded
+files use randomized storage identifiers, input validation, size
+and page limits, and automatic cleanup of expired files. These
+measures help keep temporary processing organized and reduce
+unnecessary file retention.
+
+A USEFUL TOOL FOR INDIVIDUALS AND TEAMS
+
+Use PDF to Anything for:
+
+• Converting reports and forms into editable Word documents
+• Turning tables and documents into spreadsheet formats
+• Extracting text and data from PDFs
+• Creating images from PDF pages for presentations or sharing
+• Preparing ebooks and archival documents
+• Combining invoices, chapters, or reference documents
+• Separating selected pages from large PDF files
+• Compressing files before sending them by email
+• Processing batches of PDFs with consistent output choices
+
+AUTOMATION-READY API
+
+For supported workflows, the REST API provides programmatic PDF
+conversion, job status checks, format discovery, and downloads.
+API requests use an API key header, making the conversion engine
+available for integrations and internal automation.
+
+ADMINISTRATION AND CONTROL
+
+The protected administration area provides operational visibility
+for app owners. Administrators can review conversion jobs, inspect
+job details and logs, manage available formats, update settings,
+run cleanup operations, and monitor storage usage.
+
+PDF to Anything gives you a focused set of conversion and PDF
+management tools in one place—so you can spend less time finding
+the right utility and more time working with your documents.
+
+
+FEATURE HIGHLIGHTS
+------------------------------------------------------------
+• 25+ PDF output and processing formats
+• PDF to Word/DOCX conversion
+• PDF to Excel/XLSX and CSV conversion
+• PDF to JPG, PNG, WebP, TIFF, BMP, and SVG
+• PDF to HTML, Markdown, TXT, and RTF
+• PDF to EPUB and MOBI
+• PDF to PPTX and ODP
+• PDF to JSON, XML, and YAML
+• OCR support for scanned documents
+• Bulk conversion for multiple PDFs
+• Multiple output formats from one PDF
+• Merge PDFs
+• Split PDFs
+• Extract pages
+• Extract PDF text
+• Rotate PDF pages
+• Delete PDF pages
+• Compress and optimize PDFs
+• Searchable PDF creation
+• PDF/A archival output
+• Conversion progress and job status
+• Individual file downloads
+• ZIP download for all results
+• Anonymous processing for regular users
+• Automatic cleanup of expired temporary files
+• REST API for supported automation workflows
+• Protected admin dashboard
+• Format availability controls
+• Job and system activity logs
+• Storage usage and cleanup monitoring
+• Installable Progressive Web App experience
+
+
+BENEFIT-LED FEATURE COPY
+------------------------------------------------------------
+WORK WITH THE FORMATS YOU ALREADY USE
+Move PDF content into Word, Excel, presentation, image, ebook,
+web, or structured-data workflows from a single tool.
+
+SAVE TIME ON REPEATED TASKS
+Process batches of files and request multiple output formats
+without repeating the same upload process.
+
+MAKE SCANNED CONTENT MORE USEFUL
+Use OCR support to help turn image-based PDFs into searchable,
+reusable content.
+
+KEEP PDF ORGANIZATION CLOSE AT HAND
+Merge, split, extract, rotate, remove pages, compress, and
+optimize PDFs without opening several different utilities.
+
+DOWNLOAD RESULTS YOUR WAY
+Retrieve a single converted format or download the complete set
+of generated results as a ZIP archive.
+
+SUPPORT AUTOMATION
+Use the REST API for programmatic conversion and job management
+in supported environments.
+
+
+WHO IS IT FOR?
+------------------------------------------------------------
+• Students managing assignments, readings, and research papers
+• Office workers converting reports, forms, and tables
+• Small businesses handling invoices, records, and documents
+• Researchers extracting text and data from reference material
+• Publishers preparing ebooks and web-ready content
+• Administrators organizing document archives
+• Developers integrating PDF conversion into workflows
+• Anyone who needs practical PDF tools in one place
+
+
+KEYWORD SETS
+------------------------------------------------------------
+
+PRIMARY KEYWORDS
+PDF converter, PDF conversion, PDF tools, PDF to Word, PDF to
+Excel, PDF OCR, document converter, convert PDF files, PDF
+manager, PDF organizer
+
+FORMAT KEYWORDS
+PDF to DOCX, PDF to XLSX, PDF to CSV, PDF to JPG, PDF to PNG,
+PDF to HTML, PDF to TXT, PDF to Markdown, PDF to EPUB, PDF to
+MOBI, PDF to PPTX, PDF to JSON, PDF to XML, PDF to YAML, PDF to
+RTF, PDF to ODT, PDF to ODS, PDF to SVG, PDF to WebP
+
+TOOL KEYWORDS
+merge PDF, split PDF, extract PDF pages, extract PDF text,
+rotate PDF, delete PDF pages, compress PDF, optimize PDF,
+searchable PDF, archival PDF, PDF/A, scanned PDF converter,
+OCR document converter, batch PDF conversion, bulk PDF converter
+
+AUDIENCE KEYWORDS
+student PDF tools, office PDF converter, business document
+converter, research PDF extractor, ebook converter, document
+automation, PDF workflow, file conversion utility, productivity
+tool, document management
+
+LONG-TAIL SEARCH PHRASES
+convert PDF to editable Word document
+convert PDF tables to Excel
+turn scanned PDF into searchable document
+convert PDF pages to images
+extract text and data from PDF
+merge and split PDF files
+compress PDF for email
+convert multiple PDFs at once
+convert one PDF to multiple formats
+download converted PDF files as ZIP
+PDF conversion API
+all-in-one PDF utility
+
+
+MICROSOFT STORE TAGLINE OPTIONS
+------------------------------------------------------------
+1. Convert PDFs. Organize documents. Get more done.
+2. One PDF workspace for conversion and everyday document tasks.
+3. From PDF to Word, Excel, images, ebooks, and more.
+4. Convert, extract, merge, split, and optimize PDFs with ease.
+5. Turn PDF files into useful, reusable content.
+
+
+FEATURE LIST FOR STORE IMAGE CAPTIONS
+------------------------------------------------------------
+Screenshot 1: Convert PDFs to 25+ formats
+Screenshot 2: Process multiple files in one workflow
+Screenshot 3: Create editable and searchable documents with OCR
+Screenshot 4: Merge, split, extract, rotate, and compress PDFs
+Screenshot 5: Track jobs and download individual or ZIP results
+Screenshot 6: Automate supported conversions with the REST API
+
+
+EDITORIAL NOTES
+------------------------------------------------------------
+• Avoid describing the app as a native Windows desktop application
+  unless a Windows package or wrapper is added.
+• Confirm which output formats are enabled in the deployment before
+  publishing format-specific screenshots or claims.
+• Microsoft Store character limits can vary by listing field and
+  locale; trim the short description and keyword sets as needed
+  for the selected submission form.
+• Do not promise perfect formatting, unlimited file size, or
+  guaranteed OCR accuracy.
+• Review the privacy policy and data-retention wording against the
+  final deployment configuration before publishing.
+
+
+ONE-SENTENCE ELEVATOR PITCH
+------------------------------------------------------------
+PDF to Anything is an all-in-one PDF workspace that converts
+documents into 25+ formats, processes files in bulk, supports OCR,
+and provides essential tools for merging, splitting, extracting,
+compressing, and optimizing PDFs.

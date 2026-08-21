@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "xctWrmRGcpUQtLbkSyhQO"
+uri = "file://microsoft_store_listing.txt"
+type = "text"
+title = "Microsoft Store Listing Copy"
+description = "Comprehensive Microsoft Store marketing copy for PDF to Anything, including descriptions, feature highlights, keyword sets, taglines, screenshot captions, and editorial notes."
+logical_id = "00270177-5232-4832-9ae7-8516dce4e4e2"
+content_hash = "sha256:573a15547ec4254d1e611cc1548cadfe7230f5f4561ad949aeb6ecba3428300f"
+size = 10905
+mtime_ms = 1787293057381
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:495b18cd-fd29-4247-8d5a-5a72e4174653/00270177-5232-4832-9ae7-8516dce4e4e2/42fe1bbd-1a56-4ce1-ab5c-ace1039393bb"
+storage_version_token = "1787293070733142"
+content_type = "text/plain"
