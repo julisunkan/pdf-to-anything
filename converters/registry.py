@@ -8,6 +8,7 @@ from converters.images.webp import WebpConverter
 from converters.images.svg import SvgConverter
 from converters.spreadsheets.csv import CsvConverter
 from converters.spreadsheets.xlsx import XlsxConverter
+from converters.presentations.pptx import PptxConverter
 from converters.data.json import JsonConverter
 from converters.data.xml import XmlConverter
 from converters.data.yaml import YamlConverter
@@ -23,6 +24,7 @@ CONVERTERS = {
     'svg': SvgConverter(),
     'csv': CsvConverter(),
     'xlsx': XlsxConverter(),
+    'pptx': PptxConverter(),
     'json': JsonConverter(),
     'xml': XmlConverter(),
     'yaml': YamlConverter(),

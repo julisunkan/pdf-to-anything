@@ -90,3 +90,4 @@ SQLAlchemy
 Werkzeug
 psycopg2-binary==2.9.9
 pdf2image==1.17.0
+python-pptx
