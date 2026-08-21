@@ -1,0 +1,1 @@
+- [Anonymous format UI](anonymous-format-ui.md) — public format pickers must not depend on the authenticated formats API.

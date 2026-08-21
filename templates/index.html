@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileList = document.getElementById('fileList');
     const formatsSection = document.getElementById('formatsSection');
     const formatGrid = document.getElementById('formatGrid');
+    const availableFormats = {{ formats|tojson }};
     
     let selectedFiles = [];
     
@@ -112,22 +113,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function loadFormats() {
-        fetch('/api/v1/formats')
-            .then(r => r.json())
-            .then(data => {
-                formatGrid.innerHTML = '';
-                Object.entries(data).forEach(([category, formats]) => {
-                    formats.forEach(fmt => {
-                        const label = document.createElement('label');
-                        label.className = 'format-checkbox';
-                        label.innerHTML = `
-                            <input type="checkbox" value="${fmt.name}">
-                            <span>${fmt.description}</span>
-                        `;
-                        formatGrid.appendChild(label);
-                    });
-                });
+        formatGrid.innerHTML = '';
+        Object.entries(availableFormats).forEach(([category, formats]) => {
+            formats.forEach(fmt => {
+                const label = document.createElement('label');
+                label.className = 'format-checkbox';
+                label.innerHTML = `
+                    <input type="checkbox" value="${fmt.name}" aria-label="${fmt.description}">
+                    <span>${fmt.description}</span>
+                `;
+                formatGrid.appendChild(label);
             });
+        });
+
+        if (formatGrid.children.length === 0) {
+            formatGrid.innerHTML = '<p class="empty-state">No output formats are currently available.</p>';
+        }
     }
     
     window.removeFile = function(idx) {
