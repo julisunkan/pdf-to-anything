@@ -4,7 +4,7 @@ modules = ["python-3.12", "web", "nodejs-20", "bash"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["cargo", "freetype", "glibcLocales", "imagemagickBig", "lcms2", "libiconv", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "libyaml", "openjpeg", "openssl", "pkg-config", "poppler_utils", "rustc", "tcl", "tk", "xcodebuild", "zlib", "poppler-utils"]
+packages = ["borgbackup", "calibre", "cargo", "freetype", "ghostscript", "glibcLocales", "imagemagickBig", "jbig2enc", "lcms2", "libiconv", "libimagequant", "libjpeg", "libreoffice", "libtiff", "libwebp", "libxcrypt", "libyaml", "openjpeg", "openssl", "pkg-config", "pngquant", "poppler-utils", "poppler_utils", "rustc", "tcl", "tesseract", "tk", "unpaper", "xcodebuild", "zlib"]
 
 [[ports]]
 localPort = 5000

@@ -9,6 +9,12 @@ from converters.images.svg import SvgConverter
 from converters.spreadsheets.csv import CsvConverter
 from converters.spreadsheets.xlsx import XlsxConverter
 from converters.presentations.pptx import PptxConverter
+from converters.missing import (
+    BitmapConverter, TiffConverter, RtfConverter, EpubConverter, MobiConverter,
+    OdtConverter, OdsConverter, OdpConverter, XlsConverter,
+    CompressedPdfConverter, OptimizedPdfConverter, PdfAConverter,
+    SearchablePdfConverter,
+)
 from converters.data.json import JsonConverter
 from converters.data.xml import XmlConverter
 from converters.data.yaml import YamlConverter
@@ -25,6 +31,19 @@ CONVERTERS = {
     'csv': CsvConverter(),
     'xlsx': XlsxConverter(),
     'pptx': PptxConverter(),
+    'bmp': BitmapConverter(),
+    'tiff': TiffConverter(),
+    'rtf': RtfConverter(),
+    'epub': EpubConverter(),
+    'mobi': MobiConverter(),
+    'odt': OdtConverter(),
+    'ods': OdsConverter(),
+    'odp': OdpConverter(),
+    'xls': XlsConverter(),
+    'pdf_compressed': CompressedPdfConverter(),
+    'pdf_optimized': OptimizedPdfConverter(),
+    'pdf_a': PdfAConverter(),
+    'pdf_searchable': SearchablePdfConverter(),
     'json': JsonConverter(),
     'xml': XmlConverter(),
     'yaml': YamlConverter(),
