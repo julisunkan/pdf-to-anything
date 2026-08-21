@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101b3d">
+    <meta name="description" content="Convert, edit, organize and extract data from PDF files.">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PDF Anything">
     <title>{% block title %}PDF to Anything{% endblock %}</title>
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/favicon.png') }}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ url_for('static', filename='icons/favicon-64x64.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
@@ -18,13 +25,16 @@
         <nav class="navbar">
             <div class="navbar-container">
                 <div class="navbar-brand">
-                    <a href="/">PDF to Anything</a>
+                    <a href="/" aria-label="PDF to Anything home">PDF to Anything</a>
                 </div>
                 <div class="navbar-menu">
                     <a href="/" class="nav-link">Home</a>
                     <a href="/tools/merge" class="nav-link">Tools</a>
                     <a href="/faq" class="nav-link">FAQ</a>
                     <a href="/privacy" class="nav-link">Privacy</a>
+                    {% if pwa_enabled %}
+                    <button class="install-button" id="installBtn" type="button" hidden>Install app</button>
+                    {% endif %}
                 </div>
             </div>
         </nav>

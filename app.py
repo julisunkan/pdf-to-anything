@@ -1,6 +1,6 @@
 import os
 import sys
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from config import get_config
 from models import db
@@ -9,6 +9,12 @@ from datetime import timedelta
 def create_app():
     """Application factory"""
     app = Flask(__name__)
+
+    # Serve the worker from the origin root so it can control the full app
+    # scope. The source file remains in static/ with the rest of the frontend.
+    @app.route('/service-worker.js')
+    def service_worker():
+        return send_from_directory(app.static_folder, 'service-worker.js')
     
     # Load configuration
     app.config.from_object(get_config())

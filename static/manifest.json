@@ -2,31 +2,52 @@
   "name": "PDF to Anything",
   "short_name": "PDF Anything",
   "description": "Convert, edit, organize and extract data from PDF files",
-  "start_url": "/",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007bff",
+  "background_color": "#101b3d",
+  "theme_color": "#101b3d",
   "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/static/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/static/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/maskable-icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/static/icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["productivity"],
-  "screenshots": [
+  "categories": ["business", "productivity", "utilities"],
+  "shortcuts": [
     {
-      "src": "/static/icons/screenshot-1.png",
-      "sizes": "540x720",
-      "type": "image/png"
+      "name": "Convert a PDF",
+      "short_name": "Convert",
+      "url": "/",
+      "icons": [{ "src": "/static/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Merge PDFs",
+      "short_name": "Merge",
+      "url": "/tools/merge",
+      "icons": [{ "src": "/static/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ]
 }

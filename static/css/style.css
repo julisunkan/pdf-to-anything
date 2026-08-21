@@ -38,6 +38,7 @@ body {
 .navbar-menu {
     display: flex;
     gap: 2rem;
+    align-items: center;
 }
 
 .nav-link {
@@ -48,6 +49,21 @@ body {
 
 .nav-link:hover {
     color: #007bff;
+}
+
+.install-button {
+    border: 1px solid #007bff;
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    background: #eef6ff;
+    color: #0056b3;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+}
+
+.install-button:hover {
+    background: #dcebff;
 }
 
 /* Main Content */
@@ -411,6 +427,7 @@ body {
     .navbar-menu {
         flex-direction: column;
         gap: 1rem;
+        align-items: flex-end;
     }
     
     .hero-content h1 {

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101b3d">
+    <title>Offline · PDF to Anything</title>
+    <style>
+        :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #101b3d; color: #fff; }
+        main { max-width: 32rem; padding: 2rem; text-align: center; }
+        img { width: 96px; height: 96px; margin-bottom: 1.5rem; }
+        p { color: #cbd5ff; line-height: 1.6; }
+        button { border: 0; border-radius: 999px; padding: .75rem 1.25rem; background: #f6b73c; color: #101b3d; font: inherit; font-weight: 700; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <main>
+        <img src="/static/icons/icon-192x192.png" alt="">
+        <h1>You’re offline</h1>
+        <p>PDF conversion needs a connection, but the app shell is ready. Reconnect and try again.</p>
+        <button type="button" onclick="location.reload()">Try again</button>
+    </main>
+</body>
+</html>

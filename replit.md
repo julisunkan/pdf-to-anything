@@ -16,3 +16,5 @@
 
 - PDF image conversion uses the `poppler-utils` system dependency.
 - The app creates its upload, output, and temporary storage directories at startup.
+- The app is an installable PWA when served over HTTPS (or localhost): the manifest and icons live under `static/`, the service worker is exposed at `/service-worker.js` so it can control the `/` scope, and offline navigation falls back to `static/offline.html`.
+- PWA icon artwork is sourced from `static/icons/icon-source.svg` and `static/icons/maskable-icon-source.svg`; regenerate the PNG variants if the branding changes.
