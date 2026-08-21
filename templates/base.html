@@ -25,7 +25,10 @@
         <nav class="navbar">
             <div class="navbar-container">
                 <div class="navbar-brand">
-                    <a href="/" aria-label="PDF to Anything home">PDF to Anything</a>
+                    <a href="/" aria-label="PDF to Anything home">
+                        <img src="{{ url_for('static', filename='icons/favicon-64x64.png') }}" alt="" aria-hidden="true">
+                        <span>PDF to Anything</span>
+                    </a>
                 </div>
                 <div class="navbar-menu">
                     <a href="/" class="nav-link">Home</a>
